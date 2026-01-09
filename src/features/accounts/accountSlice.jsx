@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const initialStateAccount = {
   balance: 0,
   loan: 0,
@@ -36,8 +38,17 @@ export default function accountReducer(state = initialStateAccount, action) {
   }
 }
 
-export function deposite(amount) {
-  return { type: "account/deposite", payload: amount };
+export function deposite(amount, currency) {
+  if (currency === "USD") return { type: "account/deposite", payload: amount };
+
+  return async function (dispatch, getState) {
+    const res = await axios.get(
+      `https://api.frankfurter.dev/v1/latest?base=${currency}&symbols=USD`
+    );
+    const rate = res.data.rates.USD;
+    const finAmount = amount * rate;
+    dispatch(deposite(finAmount, "USD"));
+  };
 }
 export function withdraw(amount) {
   return { type: "account/withdraw", payload: amount };

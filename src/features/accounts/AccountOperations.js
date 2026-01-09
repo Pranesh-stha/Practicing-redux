@@ -9,25 +9,25 @@ function AccountOperations() {
   const [loanPurpose, setLoanPurpose] = useState("");
   const [currency, setCurrency] = useState("USD");
 
-  const dispatch = useDispatch()
-  const account= useSelector(store => store.account)
+  const dispatch = useDispatch();
+  const account = useSelector((store) => store.account);
 
   function handleDeposit() {
-    dispatch(deposite(depositAmount))
-    setDepositAmount("")
+    dispatch(deposite(depositAmount, currency));
+    setDepositAmount("");
   }
 
   function handleWithdrawal() {
-    dispatch(withdraw(withdrawalAmount))
-    setWithdrawalAmount("")
+    dispatch(withdraw(withdrawalAmount));
+    setWithdrawalAmount("");
   }
 
   function handleRequestLoan() {
-    dispatch(loanRequest(loanAmount,loanPurpose))
+    dispatch(loanRequest(loanAmount, loanPurpose));
   }
 
   function handlePayLoan() {
-    dispatch(loanPay())
+    dispatch(loanPay());
   }
 
   return (
@@ -80,11 +80,12 @@ function AccountOperations() {
           />
           <button onClick={handleRequestLoan}>Request loan</button>
         </div>
-
-        <div>
-          <span>Pay back {account.loan}</span>
-          <button onClick={handlePayLoan}>Pay loan</button>
-        </div>
+        {account.loan > 0 && (
+          <div>
+            <span>Pay back {account.loan}</span>
+            <button onClick={handlePayLoan}>Pay loan</button>
+          </div>
+        )}
       </div>
     </div>
   );
