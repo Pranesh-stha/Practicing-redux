@@ -1,70 +1,212 @@
-# Getting Started with Create React App
+# 🏦 Redux Practice Repository – React + Redux Toolkit
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This repository is created **purely for practicing Redux concepts** in a React application.  
+The goal is to understand **how Redux works**, **why we use it**, and **how state flows** in a real app — not to build a production-ready project.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 📌 What This Project Demonstrates
 
-### `npm start`
+- How **Redux Toolkit** simplifies Redux
+- How to create a **slice**
+- How **reducers** update state
+- How **actions** are dispatched
+- How React components **re-render** when Redux state changes
+- How global state is shared without props drilling
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🧠 Core Concepts Practiced
 
-### `npm test`
+- `createSlice`
+- `initialState`
+- `reducers`
+- `dispatch`
+- `useSelector`
+- `useDispatch`
+- Global state management
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## 📁 Folder Structure
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+src/
+│
+├── features/
+│ ├── customers
+│ └── accounts
+│
+├── App.jsx # Main React component
+├── main.jsx # Entry point
+├── index.css
+└── store.js
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+yaml
+Copy code
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## 🧾 The Redux State (initialState)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+The global Redux state for this app looks like this:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```js
+const initialState = {
+  balance: 0,
+  loan: 0,
+  loanReason: ""
+};
+Meaning:
+balance → Current account balance
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+loan → Active loan amount
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+loanReason → Reason for taking the loan
 
-## Learn More
+This state is shared across the entire app.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+🧩 accountSlice.js Explained
+This file is where Redux logic lives.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Creating a Slice
+js
+Copy code
+import { createSlice } from "@reduxjs/toolkit";
+A slice includes:
 
-### Code Splitting
+Initial state
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Reducer functions
 
-### Analyzing the Bundle Size
+Automatically generated actions
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Reducers (State Updates)
+Reducers describe how state changes.
 
-### Making a Progressive Web App
+1️⃣ Deposit Money
+js
+Copy code
+deposit(state, action) {
+  state.balance += action.payload;
+}
+Adds money to balance
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+action.payload contains the amount
 
-### Advanced Configuration
+2️⃣ Withdraw Money
+js
+Copy code
+withdraw(state, action) {
+  state.balance -= action.payload;
+}
+Subtracts money from balance
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+3️⃣ Request a Loan
+js
+Copy code
+loanRequest(state, action) {
+  state.loan = action.payload.amount;
+  state.loanReason = action.payload.reason;
+  state.balance += action.payload.amount;
+}
+Stores loan amount
 
-### Deployment
+Stores loan reason
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Adds loan amount to balance
 
-### `npm run build` fails to minify
+4️⃣ Pay Loan
+js
+Copy code
+loanPay(state) {
+  state.balance -= state.loan;
+  state.loan = 0;
+  state.loanReason = "";
+}
+Deducts loan from balance
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Resets loan info
+
+🏪 Redux Store (store.js)
+js
+Copy code
+import { configureStore } from "@reduxjs/toolkit";
+import accountReducer from "./accountSlice";
+
+export const store = configureStore({
+  reducer: {
+    account: accountReducer
+  }
+});
+Why This Is Needed:
+The store holds all Redux state
+
+configureStore automatically sets up:
+
+Redux DevTools
+
+Middleware
+
+Best defaults
+
+⚛️ Using Redux in React Components
+Reading State (useSelector)
+js
+Copy code
+const balance = useSelector(state => state.account.balance);
+Subscribes the component to Redux state
+
+Component re-renders automatically when balance changes
+
+Updating State (useDispatch)
+js
+Copy code
+const dispatch = useDispatch();
+
+dispatch(deposit(100));
+Sends an action to Redux
+
+Triggers the matching reducer
+
+🔄 Re-render Behavior (Important!)
+Redux state changes → Component re-renders
+
+Only components that use that piece of state re-render
+
+Parent component may re-render, but React efficiently updates only what changed
+
+🎯 Purpose of This Repository
+This project is meant for:
+
+Learning Redux fundamentals
+
+Practicing state updates
+
+Understanding Redux Toolkit patterns
+
+Preparing for larger apps
+
+❌ No optimization (memo, selectors, middleware)
+❌ No backend
+✅ Pure Redux learning
+
+🚀 How to Run
+bash
+Copy code
+npm install
+npm run dev
+🧪 Suggested Practice Tasks
+Add interest calculation to loan
+
+Prevent withdraw if balance is insufficient
+
+Add transaction history array
+
+Split state into multiple slices
+
+Add another component that uses the same state
+
+🧠 Key Takeaway
+Redux is not about reducing re-renders,
+it’s about predictable global state management.
+
