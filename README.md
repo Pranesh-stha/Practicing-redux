@@ -39,8 +39,8 @@ src/
 │   ├── customers
 │   └── accounts
 │
-├── App.jsx               # Main React component
-├── main.jsx              # Entry point
+├── App.js               # Main React component
+├── index.js             # Entry point
 ├── store.js
 └── index.css
 
