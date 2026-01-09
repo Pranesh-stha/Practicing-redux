@@ -1,3 +1,4 @@
+
 # 🏦 Redux Practice Repository – React + Redux Toolkit
 
 This repository is created **purely for practicing Redux concepts** in a React application.  
@@ -30,19 +31,20 @@ The goal is to understand **how Redux works**, **why we use it**, and **how stat
 
 ## 📁 Folder Structure
 
+```
+
 src/
 │
-├── features/
-│ ├── customers
-│ └── accounts
+├── store/
+│   ├── customers
+│   └── accounts
 │
-├── App.jsx # Main React component
-├── main.jsx # Entry point
-├── index.css
-└── store.js
+├── App.jsx               # Main React component
+├── main.jsx              # Entry point
+├── store.js
+└── index.css
 
-yaml
-Copy code
+````
 
 ---
 
@@ -56,80 +58,99 @@ const initialState = {
   loan: 0,
   loanReason: ""
 };
-Meaning:
-balance → Current account balance
+````
 
-loan → Active loan amount
+### Meaning:
 
-loanReason → Reason for taking the loan
+* **balance** → Current account balance
+* **loan** → Active loan amount
+* **loanReason** → Reason for taking the loan
 
-This state is shared across the entire app.
+This state is **shared across the entire app**.
 
-🧩 accountSlice.js Explained
+---
+
+## 🧩 accountSlice.js Explained
+
 This file is where Redux logic lives.
 
-Creating a Slice
-js
-Copy code
+### Creating a Slice
+
+```js
 import { createSlice } from "@reduxjs/toolkit";
-A slice includes:
+```
 
-Initial state
+A **slice** includes:
 
-Reducer functions
+* Initial state
+* Reducer functions
+* Automatically generated actions
 
-Automatically generated actions
+---
 
-Reducers (State Updates)
-Reducers describe how state changes.
+### Reducers (State Updates)
 
-1️⃣ Deposit Money
-js
-Copy code
+Reducers describe **how state changes**.
+
+#### 1️⃣ Deposit Money
+
+```js
 deposit(state, action) {
   state.balance += action.payload;
 }
-Adds money to balance
+```
 
-action.payload contains the amount
+* Adds money to balance
+* `action.payload` contains the amount
 
-2️⃣ Withdraw Money
-js
-Copy code
+---
+
+#### 2️⃣ Withdraw Money
+
+```js
 withdraw(state, action) {
   state.balance -= action.payload;
 }
-Subtracts money from balance
+```
 
-3️⃣ Request a Loan
-js
-Copy code
+* Subtracts money from balance
+
+---
+
+#### 3️⃣ Request a Loan
+
+```js
 loanRequest(state, action) {
   state.loan = action.payload.amount;
   state.loanReason = action.payload.reason;
   state.balance += action.payload.amount;
 }
-Stores loan amount
+```
 
-Stores loan reason
+* Stores loan amount
+* Stores loan reason
+* Adds loan amount to balance
 
-Adds loan amount to balance
+---
 
-4️⃣ Pay Loan
-js
-Copy code
+#### 4️⃣ Pay Loan
+
+```js
 loanPay(state) {
   state.balance -= state.loan;
   state.loan = 0;
   state.loanReason = "";
 }
-Deducts loan from balance
+```
 
-Resets loan info
+* Deducts loan from balance
+* Resets loan info
 
-🏪 Redux Store (store.js)
-js
-Copy code
+---
+
+## 🏪 Redux Store (store.js)
+
+```js
 import { configureStore } from "@reduxjs/toolkit";
 import accountReducer from "./accountSlice";
 
@@ -138,75 +159,96 @@ export const store = configureStore({
     account: accountReducer
   }
 });
-Why This Is Needed:
-The store holds all Redux state
+```
 
-configureStore automatically sets up:
+### Why This Is Needed:
 
-Redux DevTools
+* The store holds **all Redux state**
+* `configureStore` automatically sets up:
 
-Middleware
+  * Redux DevTools
+  * Middleware
+  * Best defaults
 
-Best defaults
+---
 
-⚛️ Using Redux in React Components
-Reading State (useSelector)
-js
-Copy code
+## ⚛️ Using Redux in React Components
+
+### Reading State (`useSelector`)
+
+```js
 const balance = useSelector(state => state.account.balance);
-Subscribes the component to Redux state
+```
 
-Component re-renders automatically when balance changes
+* Subscribes the component to Redux state
+* Component **re-renders automatically** when balance changes
 
-Updating State (useDispatch)
-js
-Copy code
+---
+
+### Updating State (`useDispatch`)
+
+```js
 const dispatch = useDispatch();
 
 dispatch(deposit(100));
-Sends an action to Redux
+```
 
-Triggers the matching reducer
+* Sends an action to Redux
+* Triggers the matching reducer
 
-🔄 Re-render Behavior (Important!)
-Redux state changes → Component re-renders
+---
 
-Only components that use that piece of state re-render
+## 🔄 Re-render Behavior (Important!)
 
-Parent component may re-render, but React efficiently updates only what changed
+* **Redux state changes → Component re-renders**
+* Only components that **use that piece of state** re-render
+* Parent component may re-render, but React efficiently updates only what changed
 
-🎯 Purpose of This Repository
+---
+
+## 🎯 Purpose of This Repository
+
 This project is meant for:
 
-Learning Redux fundamentals
-
-Practicing state updates
-
-Understanding Redux Toolkit patterns
-
-Preparing for larger apps
+* Learning Redux fundamentals
+* Practicing state updates
+* Understanding Redux Toolkit patterns
+* Preparing for larger apps
 
 ❌ No optimization (memo, selectors, middleware)
 ❌ No backend
 ✅ Pure Redux learning
 
-🚀 How to Run
-bash
-Copy code
+---
+
+## 🚀 How to Run
+
+```bash
 npm install
 npm run dev
-🧪 Suggested Practice Tasks
-Add interest calculation to loan
+```
 
-Prevent withdraw if balance is insufficient
+---
 
-Add transaction history array
+## 🧪 Suggested Practice Tasks
 
-Split state into multiple slices
+* Add interest calculation to loan
+* Prevent withdraw if balance is insufficient
+* Add transaction history array
+* Split state into multiple slices
+* Add another component that uses the same state
 
-Add another component that uses the same state
+---
 
-🧠 Key Takeaway
-Redux is not about reducing re-renders,
-it’s about predictable global state management.
+## 🧠 Key Takeaway
+
+> Redux is **not about reducing re-renders**,
+> it’s about **predictable global state management**.
+
+---
+
+Happy learning Redux! 💙
+
+
+
 
