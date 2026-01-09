@@ -224,7 +224,7 @@ This project is meant for:
 
 ```bash
 npm install
-npm run dev
+npm start
 ```
 
 ---
