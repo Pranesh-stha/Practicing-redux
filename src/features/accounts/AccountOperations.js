@@ -23,7 +23,7 @@ function AccountOperations() {
   }
 
   function handleRequestLoan() {
-    dispatch(loanRequest(loanAmount, loanPurpose));
+    dispatch(loanRequest({amount:loanAmount, reason:loanPurpose}));
   }
 
   function handlePayLoan() {

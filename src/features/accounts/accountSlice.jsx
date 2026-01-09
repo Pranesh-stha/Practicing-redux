@@ -1,11 +1,54 @@
 import axios from "axios";
+import { createSlice } from "@reduxjs/toolkit";
 
-export const initialStateAccount = {
+export const initialState = {
   balance: 0,
   loan: 0,
   loadReason: "",
 };
 
+const accountSlice = createSlice({
+  name: "account",
+  initialState,
+  reducers: {
+    deposite(state, action) {
+      state.balance = state.balance + action.payload;
+    },
+    withdraw(state, action) {
+      state.balance = state.balance - action.payload;
+    },
+    loanRequest(state, action) {
+
+      state.loan = action.payload.amount;
+      state.loadReason = action.payload.reason;
+      state.balance = state.balance + action.payload.amount;
+    },
+    loanPay(state,action){
+      
+      state.balance= state.balance - state.loan
+      state.loan= 0
+      state.loadReason= ""
+    }
+  },
+});
+
+export default accountSlice.reducer;
+export const  { withdraw, loanRequest, loanPay} = accountSlice.actions;
+
+export function deposite(amount, currency) {
+  if (currency === "USD") return { type: "account/deposite", payload: amount };
+
+  return async function (dispatch, getState) {
+    const res = await axios.get(
+      `https://api.frankfurter.dev/v1/latest?base=${currency}&symbols=USD`
+    );
+    const rate = res.data.rates.USD;
+    const finAmount = amount * rate;
+    dispatch(deposite(finAmount, "USD"));
+  };
+}
+
+/*
 export default function accountReducer(state = initialStateAccount, action) {
   switch (action.type) {
     case "account/deposite":
@@ -62,3 +105,4 @@ export function loanRequest(amount, reason) {
 export function loanPay() {
   return { type: "account/loanPay" };
 }
+*/
