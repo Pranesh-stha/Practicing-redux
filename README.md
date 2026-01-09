@@ -215,7 +215,6 @@ This project is meant for:
 * Understanding Redux Toolkit patterns
 * Preparing for larger apps
 
-❌ No optimization (memo, selectors, middleware)
 ❌ No backend
 ✅ Pure Redux learning
 
